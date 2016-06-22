@@ -31,7 +31,7 @@ Just verify your s-project.json , component(s-component.json) and function(s-fun
 
 5. Go to lib folder which is under component and add one js file i.e, dynamodb.js. Define all your tables as per requirement
 Example:
-In below code, table name is project and it contains 4 fields. Here table name format is as per AvevaOnline format ProjectName+ '-project' + stage
+In below code, table name is project and it contains 4 fields. Here table name format is as per projects format ProjectName+ '-project' + stage
 Sample Code:
 var dynamodb = module.exports;
 
