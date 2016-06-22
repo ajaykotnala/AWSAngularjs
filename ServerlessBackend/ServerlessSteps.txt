@@ -1,0 +1,89 @@
+1.Create Serverless Project Steps:
+
+Prerequisites:
+1.	Configure the AWS Command Line Interface from your bash home directory(aws configure )
+2.	Install the serverless framework 
+3.  Create Web project
+
+Steps:
+1. Create a new serverless project using below command
+(Note: First navigate to your solution whcih contains web project and run the below command)
+serverless project create -n <project name> -d <domain name> -e <Your email> -p default -r eu-west-1 -s <stage e.g. dev or yourname>
+Example:
+serverless project create -n SampleDemo -d sampledemo.com -e abc@google.com -p default -r us-east-1 -s demoajay
+
+
+Point no.2 is obsolete if serverless version is > 5
+2. Create the component
+serverless component create <component_name>
+Example:
+serverless component create restApi
+
+3. Create the function
+
+serverless function create <component_name>/<function_name>  //cmd with administrator
+
+Example:
+serverless component create restApi/function1
+
+4. Now open your visual studio solution and choose Existing Website and select the created serverless project.
+Just verify your s-project.json , component(s-component.json) and function(s-function.json).
+
+5. Go to lib folder which is under component and add one js file i.e, dynamodb.js. Define all your tables as per requirement
+Example:
+In below code, table name is project and it contains 4 fields. Here table name format is as per AvevaOnline format ProjectName+ '-project' + stage
+Sample Code:
+var dynamodb = module.exports;
+
+var projectName = process.env.SERVERLESS_PROJECT_NAME;
+var stage = process.env.SERVERLESS_STAGE;
+
+var projectTable = projectName + '-project-' + stage;
+
+var byId = 'by-id';
+var byUserId = 'by-userid';
+
+dynamodb.byId = byId;
+dynamodb.byUserId = byUserId;
+
+dynamodb.projects = vogels.define('Project', {
+    hashKey: 'index',
+    timestamps: true,
+    schema: {
+        id: vogels.types.uuid(),
+        index: joi.string(),
+        name: joi.string(),
+        description: joi.string()
+    },
+    indexes: [
+        { hashKey: 'id', name: byId, type: 'global' }
+    ],
+    tableName: projectTable
+});
+
+
+6. Go to function folder and add your api method(GET, POST, PUT, DELETE)logic in handler.js file
+
+7. Open s-project.json file and add "cloudFormation" and define your IamRoleLambda, IamPolicyLambda,DynamoDBTables
+
+2. Host Your Serverless Project
+
+ Navigate your The serverless root directory,  the following commands need to be executed from that direcory
+	a) To deploy the resources:  serverless resources deploy -s <stage e.g. dev or yourname> -a
+	b) To deploy the lambda functions:  serverless function deploy -s <stage e.g. dev or yourname> -a
+	c) To deploy the endpoints:  serverless endpoint deploy -s <stage e.g. dev or yourname> -a
+	
+Go to Amazon console and check your serverless environement is created in S3, Lambda, DynamoDB and APIGateway services 
+
+
+3. Integrate Serverless framework with web application
+
+	a) Generate the SDK
+	b) Paste the contents of the generated SDK is placed in the folder apiGateway-js-sdk in the web project. 
+	c) Need to do next steps.
+
+
+
+
+
+

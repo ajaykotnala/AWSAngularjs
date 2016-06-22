@@ -1,0 +1,21 @@
+{
+  "name": "StudentDemo",
+  "version": "0.0.1",
+  "description": "A Serverless Project and its Serverless Plugin dependencies.",
+  "author": "Ajay Kotnala",
+  "license": "MIT",
+  "email": "kotnala.ajayk@gmail.com",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.3.2",
+    "serverless-cors-plugin": "^0.4.1",
+    "serverless-lambda-prune-plugin": "^1.1.0",
+    "serverless-optimizer-plugin": "^2.4.0",
+    "serverless-plugin-autoprune": "^0.5.3",
+    "serverless-offline": "^2.3.2"
+  }
+}
