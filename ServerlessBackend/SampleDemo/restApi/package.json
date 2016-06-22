@@ -1,0 +1,20 @@
+{
+  "name": "StudentDemo",
+  "version": "0.0.1",
+  "description": "A Serverless Project and its Serverless Plugin dependencies.",
+  "author": "Ajay Kotnala",
+  "license": "MIT",
+  "email": "kotnala.ajayk@gmail.com",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.3.2",
+     "async": "^1.5.0",
+    "joi": "^5.1.0",
+    "bluebird": "^3.3.4",
+    "vogels": "^2.2.0"
+  }
+}

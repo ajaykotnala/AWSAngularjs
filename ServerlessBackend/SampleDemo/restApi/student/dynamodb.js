@@ -12,14 +12,13 @@ var byId = 'by-id';
 var byUserId = 'by-userid';
 
 dynamodb.byId = byId;
-dynamodb.byUserId = byUserId;
 
 dynamodb.projects = vogels.define('Project', {
-    hashKey: 'index',
+    hashKey: 'studentId',
     timestamps: true,
     schema: {
         id: vogels.types.uuid(),
-        index: joi.string(),
+        studentId: joi.string(),
         name: joi.string(),
         description: joi.string()
     },

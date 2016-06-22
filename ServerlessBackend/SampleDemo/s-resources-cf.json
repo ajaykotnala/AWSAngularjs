@@ -57,6 +57,10 @@
             "AttributeName": "name",
             "AttributeType": "S"
           },
+           {
+            "AttributeName": "studentId",
+            "AttributeType": "S"
+          },
           {
             "AttributeName": "age",
             "AttributeType": "S"
@@ -64,7 +68,7 @@
         ],
         "KeySchema": [
           {
-            "AttributeName": "name",
+            "AttributeName": "studentId",
             "KeyType": "HASH"
           },
           {

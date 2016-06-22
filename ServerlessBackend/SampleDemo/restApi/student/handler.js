@@ -1,4 +1,10 @@
 'use strict';
+var aws = require('aws-sdk');
+var async = require('async');
+var vogels = require('vogels');
+var joi = require('joi');
+
+var dynamodbitems = require('./dynamodb.js');
 
 
 // Lambda Handler
@@ -18,6 +24,19 @@ module.exports.handler = function (event, context, callback) {
         return callback(lib.errors.unexpectedErrorRequestText() + context.awsRequestId);
     }
 };
+    // Get project or projects
+    function getHandler(event, context) {
+      console.log("get handler execution:", param)
+    dynamodbitems.projects
+    .query(event.studentId)
+    .exec(
+       function (err, data) {
+           if (err) context.fail(err);
+           else {
+              (context.succeed(data));
+           }
+       });
+    }
 
 function getHttpHandler(event) {
     switch (event.httpMethod) {
@@ -46,17 +65,27 @@ function getHttpHandler(event) {
     //     });
     // }
 
-    // Get project or projects
-    function getHandler(event, context) {
-        prv.getServiceInstances({
-            accountId: event.accountId,
-            serviceTypeId: serviceTypeId
-        },
-            function (err, data) {
-                if (err) context.fail(err);
-                else (context.succeed(data));
-            });
-    }
+
+
+//     console.log('Loading event');
+// var AWS = require('aws-sdk');
+// var dynamodb = new AWS.DynamoDB();
+
+// var params = {
+//     TableName : 'DemoStudent',
+    
+//   };
+// exports.handler = function(event, context,callback) {
+//   dynamodb.scan(params, function(err, data) {
+//     if (err) {
+//       console.log(err); // an error occurred
+//       } 
+//     else {
+//       console.log(data); // successful response
+//      callback(null, data.Items);
+//       }
+//   });
+// };
 
 
     // Update a project instance
