@@ -1,5 +1,5 @@
 {
-  "name": "StudentDemo",
+  "name": "DEMOStudent",
   "version": "0.0.1",
   "description": "A Serverless Project and its Serverless Plugin dependencies.",
   "author": "Ajay Kotnala",
@@ -16,6 +16,13 @@
     "serverless-lambda-prune-plugin": "^1.1.0",
     "serverless-optimizer-plugin": "^2.4.0",
     "serverless-plugin-autoprune": "^0.5.3",
-    "serverless-offline": "^2.3.2"
+    "serverless-offline": "^2.3.2",
+    "async": "^1.5.0",
+    "joi": "^5.1.0",
+    "bluebird": "^3.3.4",
+    "vogels": "^2.2.0"
+  },
+  "devDependencies": {
+    "async": "^1.5.2"
   }
 }

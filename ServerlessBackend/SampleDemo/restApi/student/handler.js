@@ -9,7 +9,7 @@ var dynamodbitems = require('./dynamodb.js');
 
 // Lambda Handler
 module.exports.handler = function (event, context, callback) {
-    lib.logging.standardLog(event, context);
+      
     console.log("Event:" + JSON.stringify(event));
     try {
         var httpHandler = getHttpHandler(event);
@@ -20,25 +20,13 @@ module.exports.handler = function (event, context, callback) {
         httpHandler(event, context);
     }
     catch (exception) {
-        console.error(lib.errors.unexpectedErrorText() + exception);
-        return callback(lib.errors.unexpectedErrorRequestText() + context.awsRequestId);
-    }
+        console.error("error in catch1" + exception);
+        return callback("lib.errors.unexpectedErrorRequestText()" + context.awsRequestId);
+    }   
 };
-    // Get project or projects
-    function getHandler(event, context) {
-      console.log("get handler execution:", param)
-    dynamodbitems.projects
-    .query(event.studentId)
-    .exec(
-       function (err, data) {
-           if (err) context.fail(err);
-           else {
-              (context.succeed(data));
-           }
-       });
-    }
-
+ 
 function getHttpHandler(event) {
+     console.log("gethttpHandler" + JSON.stringify(event));
     switch (event.httpMethod) {
         // case 'DELETE':
         //     return deleteHandler;
@@ -51,6 +39,21 @@ function getHttpHandler(event) {
         default:
             return null;
     }
+
+       // Get project or projects
+    function getHandler(event, context) {
+      console.log("get handler execution:", event)
+    dynamodbitems.students
+    .query(event.studentId)
+    .exec(
+       function (err, data) {
+           if (err) context.fail(err);
+           else {
+              (context.succeed(data));
+           }
+       });
+    }
+
 
     // Delete a project instance
     // function deleteHandler(event, context) {

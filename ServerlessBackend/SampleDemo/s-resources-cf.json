@@ -39,6 +39,25 @@
                 "logs:PutLogEvents"
               ],
               "Resource": "arn:aws:logs:${region}:*:*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:*"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudformation:*",
+                "ec2:*",
+                "lambda:*",
+                "s3:*",
+                "sns:*",
+                "iam:PassRole"
+              ],
+              "Resource": "*"
             }
           ]
         },
@@ -49,20 +68,16 @@
         ]
       }
     },
-	"ServiceInstancesDynamoDBTable": {
+      "StudentTableSLSRes": {
       "Type": "AWS::DynamoDB::Table",
       "Properties": {
         "AttributeDefinitions": [
           {
-            "AttributeName": "name",
-            "AttributeType": "S"
-          },
-           {
             "AttributeName": "studentId",
             "AttributeType": "S"
           },
           {
-            "AttributeName": "age",
+            "AttributeName": "studentName",
             "AttributeType": "S"
           }
         ],
@@ -72,7 +87,7 @@
             "KeyType": "HASH"
           },
           {
-            "AttributeName": "age",
+            "AttributeName": "studentName",
             "KeyType": "RANGE"
           }
         ],
@@ -83,7 +98,7 @@
         "StreamSpecification": {
           "StreamViewType": "NEW_AND_OLD_IMAGES"
         },
-        "TableName": "studentTable"
+        "TableName": "StudentTableSls"
       }
     }
   },

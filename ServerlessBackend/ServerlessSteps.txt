@@ -84,6 +84,35 @@ Go to Amazon console and check your serverless environement is created in S3, La
 
 
 
+    Deployment steps:
+
+   1) serverless project init -n "Name of project of anything" -e <your email> -p default -r eu-west-1 -s <stage e.g. dev or yourname> -c
+    
+   2) Set the following serverless variables using: serverless variables set -s <stage> -r <region> -k <name> -v <value>
+   
+authorizationType => none for no authorization or CUSTOM to use authorization
+loglevel => off for no logging or debug for logging
+aws-environment => one of ...
+Production
+Test
+Development
+Delete (* this tag will be used in the future to trigger an automated clearing process)
+
+aws-contact => your email
+webBucket => name of web site S3 bucket
+Required for service type creation. This isthe S3 repository where the website resides.
+webCFDistribution => id of cloud front distribution
+(Optional) Set the value for the Web Cloud Distribution. (If your connect web site is hosted behind cloudfront then this is the id of the cloud front distribution).
+
+
+To deploy the resources:  serverless resources deploy -s <stage e.g. dev or yourname> -r <region> -a
+To deploy the lambda functions:  serverless function deploy -s <stage e.g. dev or yourname> -r <region> -a
+To deploy the events:  serverless event deploy -s <stage e.g. dev or yourname> -r <region> -a
+To deploy the endpoints:  serverless endpoint deploy -s <stage e.g. dev or yourname> -r <region> -a
+To deploy the s3 folder contents:  serverless s3 deploy -s <stage e.g. dev or yourname> -r <region>
+
+
+
 
 
 

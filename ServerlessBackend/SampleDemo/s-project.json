@@ -1,5 +1,24 @@
 {
-  "name": "SampleDemo",
-  "custom": {},
-  "plugins": []
+  "name": "DEMOStudent",
+  "custom": {
+    "cors": {
+      "allowOrigin": "*",
+      "allowHeaders": [
+        "Content-Type",
+        "X-Amz-Date",
+        "Authorization",
+        "X-Api-Key"
+      ]
+    }
+  },
+  "plugins": [
+    "serverless-lambda-prune-plugin",
+    "serverless-cors-plugin",
+    "serverless-offline"
+  ],
+  "version": "0.0.1",
+  "profile": "serverless-v0.5.3",
+  "location": "https://github.com/...",
+  "author": "",
+  "description": "demo student Serverless Project"
 }
