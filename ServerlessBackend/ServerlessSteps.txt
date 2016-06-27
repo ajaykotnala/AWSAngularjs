@@ -76,7 +76,7 @@ dynamodb.projects = vogels.define('Project', {
 Go to Amazon console and check your serverless environement is created in S3, Lambda, DynamoDB and APIGateway services 
 
 
-3. Integrate Serverless framework with web application
+3. Integrate Serverless framework with web application / or follow restangular library to exclude all steps mention belwo
 
 	a) Generate the SDK
 	b) Paste the contents of the generated SDK is placed in the folder apiGateway-js-sdk in the web project. 
@@ -84,7 +84,8 @@ Go to Amazon console and check your serverless environement is created in S3, La
 
 
 
-    Deployment steps:
+
+Deployment steps:
 
    1) serverless project init -n "Name of project of anything" -e <your email> -p default -r eu-west-1 -s <stage e.g. dev or yourname> -c
     
