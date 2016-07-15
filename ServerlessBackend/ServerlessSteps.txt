@@ -1,119 +1,129 @@
-1.Create Serverless Project Steps:
+serverless project create -n SampleDemo -d sampledemo.com -e abc@google.com -p default -r us-east-1 -s demo
+serverless function create functions/student
 
-Prerequisites:
-1.	Configure the AWS Command Line Interface from your bash home directory(aws configure )
-2.	Install the serverless framework 
-3.  Create Web project
-
-Steps:
-1. Create a new serverless project using below command
-(Note: First navigate to your solution whcih contains web project and run the below command)
-serverless project create -n <project name> -d <domain name> -e <Your email> -p default -r eu-west-1 -s <stage e.g. dev or yourname>
-Example:
-serverless project create -n SampleDemo -d sampledemo.com -e abc@google.com -p default -r us-east-1 -s demoajay
+add dependiences to package.json(root  sampledemoin our case)
+	"aws-sdk": "^2.3.2",
+	"serverless-cors-plugin": "^0.4.1",
+	"serverless-lambda-prune-plugin": "^1.1.0",
+	"serverless-offline": "^2.2.9",
+	"serverless-optimizer-plugin": "^2.4.0",
+	"serverless-plugin-autoprune": "^0.5.3"
 
 
-Point no.2 is obsolete if serverless version is > 5
-2. Create the component
-serverless component create <component_name>
-Example:
-serverless component create restApi
+add package.json to functions(if required)
 
-3. Create the function
+add dynamodb.js in function/lib folder (then add code)
+		'use strict';
 
-serverless function create <component_name>/<function_name>  //cmd with administrator
+		var dynamodb = module.exports;
+		const vogels = require('vogels'),
+			joi = require('joi'),
+			 async = require('async'),
+			 aws = require('aws-sdk');
 
-Example:
-serverless component create restApi/function1
+		var projectName = process.env.SERVERLESS_PROJECT_NAME;
+		var stage = process.env.SERVERLESS_STAGE;
 
-4. Now open your visual studio solution and choose Existing Website and select the created serverless project.
-Just verify your s-project.json , component(s-component.json) and function(s-function.json).
+						var studentTable = "StudentTableSls";
 
-5. Go to lib folder which is under component and add one js file i.e, dynamodb.js. Define all your tables as per requirement
-Example:
-In below code, table name is project and it contains 4 fields. Here table name format is as per projects format ProjectName+ '-project' + stage
-Sample Code:
-var dynamodb = module.exports;
+						var byId = 'by-id';
+						var byUserId = 'by-userid';
 
-var projectName = process.env.SERVERLESS_PROJECT_NAME;
-var stage = process.env.SERVERLESS_STAGE;
+						dynamodb.byId = byId;
 
-var projectTable = projectName + '-project-' + stage;
-
-var byId = 'by-id';
-var byUserId = 'by-userid';
-
-dynamodb.byId = byId;
-dynamodb.byUserId = byUserId;
-
-dynamodb.projects = vogels.define('Project', {
-    hashKey: 'index',
-    timestamps: true,
-    schema: {
-        id: vogels.types.uuid(),
-        index: joi.string(),
-        name: joi.string(),
-        description: joi.string()
-    },
-    indexes: [
-        { hashKey: 'id', name: byId, type: 'global' }
-    ],
-    tableName: projectTable
-});
+						dynamodb.students = vogels.define('students', {
+							hashKey: 'studentId',
+							timestamps: true,
+							schema: {
+								studentId: joi.string(),
+								studentName: joi.string()
+							},
+							indexes: [
+								{ hashKey: 'studentId', name: byId, type: 'global' }
+							],
+							tableName: studentTable
+						});
 
 
-6. Go to function folder and add your api method(GET, POST, PUT, DELETE)logic in handler.js file
 
-7. Open s-project.json file and add "cloudFormation" and define your IamRoleLambda, IamPolicyLambda,DynamoDBTables
 
-2. Host Your Serverless Project
+edit s-resources-cf for table resource
 
- Navigate your The serverless root directory,  the following commands need to be executed from that direcory
-	a) To deploy the resources:  serverless resources deploy -s <stage e.g. dev or yourname> -a
-	b) To deploy the lambda functions:  serverless function deploy -s <stage e.g. dev or yourname> -a
-	c) To deploy the endpoints:  serverless endpoint deploy -s <stage e.g. dev or yourname> -a
+	"StudentTableSLSRes": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "studentId",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "studentName",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "studentId",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "studentName",
+            "KeyType": "RANGE"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": "1",
+          "WriteCapacityUnits": "1"
+        },
+        "StreamSpecification": {
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "TableName": "StudentTableSls"
+      }
+    }
 	
-Go to Amazon console and check your serverless environement is created in S3, Lambda, DynamoDB and APIGateway services 
+	
+add allow access for dynamodb and other resources in IamPolicy
 
+  "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Resource": "arn:aws:logs:${region}:*:*"
+            },
+			{
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:*"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cloudformation:*",
+                "ec2:*",
+                "lambda:*",
+                "s3:*",
+                "sns:*",
+                "iam:PassRole"
+              ],
+              "Resource": "*"
+            }
+          ]
+		  
+edit handler for code change (get in our case)
 
-3. Integrate Serverless framework with web application / or follow restangular library to exclude all steps mention belwo
+add s-templates.json (for http handler)
+edit s-project.json for allow headers and origin
 
-	a) Generate the SDK
-	b) Paste the contents of the generated SDK is placed in the folder apiGateway-js-sdk in the web project. 
-	c) Need to do next steps.
+npm install in root and function level and add package.json inside student and npminstall(this last bit is not necessary but i am stupid can't figure out why i am not able to fix this bug)
 
-
-
-
-Deployment steps:
-
-   1) serverless project init -n "Name of project of anything" -e <your email> -p default -r eu-west-1 -s <stage e.g. dev or yourname> -c
-    
-   2) Set the following serverless variables using: serverless variables set -s <stage> -r <region> -k <name> -v <value>
-   
-authorizationType => none for no authorization or CUSTOM to use authorization
-loglevel => off for no logging or debug for logging
-aws-environment => one of ...
-Production
-Test
-Development
-Delete (* this tag will be used in the future to trigger an automated clearing process)
-
-aws-contact => your email
-webBucket => name of web site S3 bucket
-Required for service type creation. This isthe S3 repository where the website resides.
-webCFDistribution => id of cloud front distribution
-(Optional) Set the value for the Web Cloud Distribution. (If your connect web site is hosted behind cloudfront then this is the id of the cloud front distribution).
-
-
-To deploy the resources:  serverless resources deploy -s <stage e.g. dev or yourname> -r <region> -a
-To deploy the lambda functions:  serverless function deploy -s <stage e.g. dev or yourname> -r <region> -a
-To deploy the events:  serverless event deploy -s <stage e.g. dev or yourname> -r <region> -a
-To deploy the endpoints:  serverless endpoint deploy -s <stage e.g. dev or yourname> -r <region> -a
-To deploy the s3 folder contents:  serverless s3 deploy -s <stage e.g. dev or yourname> -r <region>
-
-
-
-
-
-
+a) To deploy the resources:  serverless resources deploy -s <stage e.g. dev or yourname> -a
+b) To deploy the lambda functions:  serverless function deploy -s <stage e.g. dev or yourname> -a
+c) To deploy the endpoints:  serverless endpoint deploy -s <stage e.g. dev or yourname> -a
